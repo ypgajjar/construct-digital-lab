@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConStruct Digital Lab</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700&family=Roboto+Mono:wght@400;500;700&family=Aldrich&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="blueprint-theme"> <!-- Default class will be managed by JS -->
+
+    <!-- Initial Loading Animation -->
+    <div id="systemLoader" class="system-loader active">
+        <div class="loader-core-wrapper">
+            <div class="loader-core">
+                <div class="loader-ring"></div>
+                <i class="fas fa-hard-hat loader-icon-main"></i>
+            </div>
+        </div>
+        <div class="loader-text-sequence">
+            <p class="loader-text-item">Initializing Digital Workspace...</p>
+            <p class="loader-text-item">Calibrating Precision Tools...</p>
+            <p class="loader-text-item">Loading Engineering Modules...</p>
+            <p class="loader-text-item">System Online.</p>
+        </div>
+    </div>
+
+    <div class="site-grid-wrapper">
+        <header class="lab-header">
+            <div class="logo-area">
+                <i class="fas fa-drafting-compass logo-icon-header"></i>
+                <span class="logo-main">CS</span><span class="logo-sub">D/Lab</span>
+            </div>
+            <nav class="lab-nav">
+                <a href="#hero-interface-anchor" class="nav-link active-nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                <a href="#tool-interface-anchor" class="nav-link"><i class="fas fa-tools"></i> Tool Interface</a>
+                <!-- <a href="#about-anchor" class="nav-link"><i class="fas fa-info-circle"></i> About Project</a> -->
+            </nav>
+            <button id="themeToggleButton" class="theme-toggle-btn" title="Toggle Theme">
+                <i class="fas fa-sun"></i> <!-- Initial icon will be set by JS based on default theme -->
+            </button>
+        </header>
+        
+        <div id="hero-interface-anchor" style="position: relative; top: -var(--header-height);"></div>
+
+        <main class="lab-main-content">
+            <section class="hero-interface">
+                <div class="hero-overlay"></div>
+                <div class="hero-background-elements">
+                    <div class="topography-bg"></div>
+                    <div class="animated-grid-background"></div>
+                </div>
+                <div class="hero-text">
+                    <h1 class="reveal-text">DIGITAL ENGINEERING NEXUS</h1>
+                    <p class="reveal-text-delayed">Pioneering construction technology through interactive & precision-built web applications.</p>
+                    <a href="#tool-interface-anchor" class="cta-button primary-cta reveal-button"><i class="fas fa-compass-drafting"></i> Explore Toolset</a>
+                </div>
+            </section>
+            
+            <div id="tool-interface-anchor" style="position: relative; top: -var(--header-height);"></div>
+
+            <section class="tool-interface-section">
+                <aside class="layer-control-panel">
+                    <h3><i class="fas fa-layer-group"></i> MODULE LAYERS</h3>
+                    <nav id="moduleCategories">
+                        <ul>
+                            <li><a href="#" class="category-filter active" data-category="all"><i class="fas fa-border-all"></i> All Modules</a></li>
+                            <li><a href="#" class="category-filter" data-category="project-management"><i class="fas fa-tasks"></i> Project Management</a></li>
+                            <!-- <li><a href="#" class="category-filter" data-category="geo-tech"><i class="fas fa-globe-americas"></i> Geo-Tech Tools</a></li> -->
+                        </ul>
+                    </nav>
+                    <div class="panel-accent-strip"></div>
+                </aside>
+
+                <div class="module-display-grid" id="moduleDisplayGrid">
+                    <!-- Project "Modules" will be injected here by script.js -->
+                    <p class="no-modules-message" style="display:none;">No modules found for this category. Constructing new solutions daily!</p>
+                </div>
+            </section>
+        </main>
+
+        <footer class="lab-footer">
+            <div class="footer-content">
+                <p>© <span id="currentYearLab"></span> ConStruct Digital Lab. Precision Engineered Solutions.</p>
+                <!-- <a href="mailto:your-email@example.com?subject=Issue Report - ConStruct Digital Lab" class="footer-report-link">
+                    <i class="fas fa-bug"></i> Report an Issue
+                </a> -->
+            </div>
+            <div class="social-links">
+                <a href="[https://www.linkedin.com/in/yashpalgajjar/]" target="_blank" rel="noopener noreferrer" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="[https://github.com/ypgajjar]" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
+            </div>
+            <div class="footer-disclaimer">
+                <p>For demonstration only. Always consult qualified professionals for project decisions.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Tool Inspector Modal -->
+    <div id="toolInspector" class="tool-inspector-overlay">
+        <div class="inspector-dialog">
+            <button class="inspector-close-btn" aria-label="Close Inspector"><i class="fas fa-times"></i></button>
+            <div class="inspector-header">
+                <i id="inspectorIcon" class="fas fa-tools inspector-title-icon"></i>
+                <div>
+                    <h3 id="inspectorTitle"></h3>
+                    <div id="inspectorTags" class="inspector-module-tags"></div>
+                </div>
+            </div>
+            <div class="inspector-body">
+                <div class="inspector-visual-pane">
+                    <img id="inspectorImage" src="images/default_cover.png" alt="Tool Visual Representation">
+                    <div class="visual-pane-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+                <div class="inspector-details-pane">
+                    <h4><i class="fas fa-file-alt"></i> Operational Briefing:</h4>
+                    <p id="inspectorDescription"></p>
+                    <h4><i class="fas fa-cogs"></i> Core Specifications:</h4>
+                    <ul id="inspectorFeatures"></ul>
+                </div>
+            </div>
+            <div class="inspector-actions">
+                <a id="inspectorLaunchLink" href="#" class="btn-launch-tool" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-rocket"></i> LAUNCH MODULE
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
