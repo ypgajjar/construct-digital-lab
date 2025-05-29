@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ]
         },
         {
-            id: 'project-crashing', title: 'Timeline Acceleration Optimizer', category: 'project-management',
+            id: 'project-crashing', title: 'Cost Acceleration Optimizer', category: 'project-management',
             shortDesc: 'Analyze cost-schedule trade-offs for acceleration.',
             description: 'Strategically analyze cost and schedule trade-offs using advanced crashing techniques to determine the most economically efficient methods for accelerating project timelines under pressure.',
             tags: ['Schedule Optimization', 'Cost-Benefit Analysis', 'Critical Path Method', 'Project Acceleration'],
