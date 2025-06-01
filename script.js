@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
             shortDesc: 'Visualize and optimize repetitive work sequences.',
             description: 'A comprehensive tool to visualize and optimize repetitive work sequences across multiple units, promoting lean construction principles and streamlined scheduling for cyclical projects.',
             tags: ['Linear Scheduling', 'Lean Construction', 'Workflow Visualization', 'Process Optimization'],
-            ghPagesUrl: 'https://ypgajjar.github.io/lob-calculator/',
+            ghPagesUrl: 'lob-calculator/index.html',
             thumbnailImage: 'images/lob_calculator_thumb.png',
             coverImage: 'images/lob_calculator_cover.png',
             icon: 'fas fa-stream', // Added icon
@@ -48,26 +48,29 @@ document.addEventListener('DOMContentLoaded', function() {
             shortDesc: 'AI-enhanced quality control checklists by CSI division.',
             description: 'An intelligent platform for organized quality control checklists, aligned with CSI divisions and augmented with AI insights (Beta) for thorough project oversight and compliance assurance.',
             tags: ['Quality Assurance', 'AI Inspection', 'CSI Standards', 'Digital Compliance'],
-            ghPagesUrl: 'https://ypgajjar.github.io/qa-qc-checklists/',
+            ghPagesUrl: 'qa-qc/index.html',
             thumbnailImage: 'images/qa_qc_checklists_thumb.png',
             coverImage: 'images/qa_qc_checklists_cover.png',
             icon: 'fas fa-check-double', // Added icon
             features: [
                 'Standardized Checklists based on CSI MasterFormat.',
-                'AI-Powered Anomaly Detection & Suggestions (Beta).',
+                'AI-Powered Checklist Generation (Beta).',
                 'Secure Digital Record Keeping & Audit Trails.',
                 'Improved Site Inspection Efficiency & Accuracy.'
             ]
         },
         {
-            id: 'project-crashing', title: 'Cost Acceleration Optimizer', category: 'project-management',
+            id: 'project-crashing', // This ID is used in the HTML to link
+            title: 'Cost Acceleration Optimizer', 
+            category: 'project-management',
             shortDesc: 'Analyze cost-schedule trade-offs for acceleration.',
             description: 'Strategically analyze cost and schedule trade-offs using advanced crashing techniques to determine the most economically efficient methods for accelerating project timelines under pressure.',
             tags: ['Schedule Optimization', 'Cost-Benefit Analysis', 'Critical Path Method', 'Project Acceleration'],
-            ghPagesUrl: 'https://ypgajjar.github.io/project-crashing-optimizer/',
+            // IMPORTANT: Update this URL to point to your optimizer's index.html
+            ghPagesUrl: 'project-crashing-optimizer/index.html', // Adjust path if needed
             thumbnailImage: 'images/project_crashing_optimizer_thumb.png',
             coverImage: 'images/project_crashing_optimizer_cover.png',
-            icon: 'fas fa-fighter-jet', // Added icon
+            icon: 'fas fa-fighter-jet',
             features: [
                 'Optimal Cost Calculation for Schedule Reduction Targets.',
                 'Identification of Critical Activities for Crashing.',

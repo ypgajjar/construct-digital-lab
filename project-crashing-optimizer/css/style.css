@@ -1,0 +1,634 @@
+/* === APP STYLES ALIGNED WITH BLUEPRINT INTERFACE THEME === */
+
+/* This file assumes the main Blueprint theme CSS (with :root variables) is loaded first. */
+
+/* Specific body styling for this app page, if needed beyond main theme */
+body.app-body {
+    /* font-family is inherited from main theme's body rule */
+    /* background-color is inherited */
+    /* color is inherited */
+    /* line-height is inherited */
+    padding-top: var(--header-height); /* Example: If replicating fixed header */
+    padding-bottom: 20px; /* Ensure some space at the bottom */
+}
+
+/* If not replicating header, app-body might need less or no top padding if it's standalone */
+/* For instance, if it's meant to be embedded or linked without its own header: */
+/* body.app-body { padding: 20px; } */
+
+
+/* Custom Scrollbar (if main theme doesn't apply it globally or if body has overflow:auto) */
+body.app-body::-webkit-scrollbar { width: 9px; }
+body.app-body::-webkit-scrollbar-track { background: var(--bg-blueprint-medium); }
+body.app-body::-webkit-scrollbar-thumb { background-color: var(--accent-electric-blue); border-radius: var(--border-radius-tech); border: 2px solid var(--bg-blueprint-medium); }
+body.app-body::-webkit-scrollbar-thumb:hover { background-color: var(--accent-cyber-orange); }
+
+
+.app-container {
+    max-width: 1300px; /* Or adjust as needed for app content */
+    margin: 30px auto; /* Centering the container */
+    background-color: var(--bg-blueprint-medium);
+    padding: 30px 40px;
+    border-radius: var(--border-radius-tech);
+    border: 1px solid var(--border-color-dark);
+    box-shadow: var(--shadow-depth);
+}
+
+/* === Typography === */
+.app-container h1 {
+    font-family: var(--font-display);
+    font-size: 2.4em;
+    font-weight: normal; /* Aldrich doesn't need bold */
+    color: var(--text-accent-highlight);
+    text-align: center;
+    margin-bottom: 35px; /* More space after main title */
+    padding-bottom: 20px; /* Deeper padding */
+    border-bottom: 1px solid var(--border-color-medium);
+    letter-spacing: 1px;
+}
+
+.app-container h2 {
+    font-family: var(--font-technical);
+    font-size: 1.8em; /* Slightly larger section titles */
+    font-weight: 600;
+    color: var(--text-primary-on-dark);
+    margin-top: 45px; /* More space above section titles */
+    margin-bottom: 25px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color-medium);
+    letter-spacing: 0.5px;
+}
+.app-container h2:first-of-type { /* Reduce top margin for the very first h2 */
+    margin-top: 20px;
+}
+
+
+.app-container p {
+    margin-bottom: 15px;
+    color: var(--text-secondary-on-dark);
+    font-weight: 300;
+    line-height: 1.7; /* Slightly more spacious line height for readability */
+}
+
+.app-container strong {
+    font-weight: 600; /* Default strong */
+    color: var(--text-primary-on-dark);
+}
+
+.app-container hr {
+    border: 0;
+    height: 1px;
+    background: var(--border-color-medium);
+    margin: 30px 0; /* More prominent separator */
+}
+
+/* === Sections & Info Boxes === */
+.info-box,
+.controls, /* Applied to Control Panel and Gantt Controls sections */
+.results-grid-container {
+    background-color: var(--bg-blueprint-light);
+    padding: 25px;
+    border-radius: var(--border-radius-tech);
+    margin-bottom: 35px; /* Increased spacing */
+    border: 1px solid var(--border-color-medium);
+    box-shadow: inset 0 1px 4px rgba(0,0,0,0.15); /* Slightly deeper inset */
+}
+
+.info-box p {
+    font-size: 0.95em; /* Slightly larger for info box */
+    color: var(--text-secondary-on-dark);
+    line-height: 1.6;
+}
+.info-box p strong {
+    color: var(--accent-cyber-orange); /* Highlight key terms in info box */
+}
+
+/* === Tables === */
+table.app-table { /* Targets tables with this specific class */
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0; /* table-container handles margin */
+    font-size: 0.9em;
+    font-family: var(--font-technical); /* Default for details table */
+}
+
+.app-table th, .app-table td {
+    border: 1px solid var(--border-color-medium);
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: middle;
+    color: var(--text-secondary-on-dark);
+}
+
+.app-table thead th {
+    background-color: var(--bg-blueprint-light); /* Match section bg */
+    color: var(--text-primary-on-dark);
+    font-weight: 600;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    padding: 10px 12px;
+    position: sticky; /* If table-container is scrollable */
+    top: 0;
+    z-index: 10;
+}
+
+.app-table tbody tr:nth-child(even) {
+    background-color: var(--bg-blueprint-dark); /* For dark theme, dark on medium */
+}
+.light-theme .app-table tbody tr:nth-child(even) {
+    background-color: #f8f9fa; /* Standard light theme striping */
+}
+
+.app-table tbody tr:hover {
+    background-color: rgba(var(--accent-electric-blue-rgb, 0, 191, 255), 0.1);
+}
+.light-theme .app-table tbody tr:hover {
+     background-color: rgba(var(--accent-electric-blue-rgb, 0, 123, 255), 0.08);
+}
+
+
+.table-container {
+    overflow-x: auto;
+    border: 1px solid var(--border-color-dark);
+    border-radius: var(--border-radius-tech);
+    margin-bottom: 20px;
+    background-color: var(--bg-blueprint-medium); /* Matches main app container */
+    padding: 1px; /* To ensure borders are contained */
+}
+
+/* Input Project Activities Table Specifics */
+#activityInputTable { /* Already has .app-table */
+    font-family: var(--font-mono); /* Override for data entry */
+}
+
+#activityInputTable th {
+    white-space: normal;
+    line-height: 1.3;
+    font-size: 0.8em; /* Smaller for dense mono headers */
+}
+
+#activityInputTable th,
+#activityInputTable td {
+    padding: 8px 10px;
+    word-break: break-word;
+}
+#activityInputTable thead th {
+     color: var(--text-accent-highlight); /* Main input table headers standout */
+}
+
+/* Centering for input table */
+#activityInputTable th:nth-child(n+3):nth-child(-n+9),
+#activityInputTable td:nth-child(n+3):nth-child(-n+9),
+#activityInputTable th:first-child, #activityInputTable td:first-child,
+#activityInputTable th:last-child, #activityInputTable td:last-child
+{
+    text-align: center;
+}
+#activityInputTable th:nth-child(2), #activityInputTable td:nth-child(2) { text-align: left; }
+
+
+#activityInputTable td:last-child { /* Actions cell */
+    padding: 6px;
+}
+
+#activityInputTable .delete-btn {
+    background: transparent;
+    color: var(--text-muted-on-dark);
+    border: 1px solid var(--border-color-medium);
+    padding: 5px 10px;
+    font-size: 0.8em;
+    line-height: 1;
+    border-radius: var(--border-radius-tech);
+    cursor: pointer;
+    transition: all var(--transition-main);
+    font-family: var(--font-technical);
+}
+#activityInputTable .delete-btn:hover {
+    color: var(--accent-cyber-orange);
+    border-color: var(--accent-cyber-orange);
+    background-color: rgba(var(--accent-cyber-orange-rgb, 255, 153, 0), 0.1);
+}
+
+#activityInputTable td input,
+#activityInputTable input.calculated-field {
+    padding: 7px 9px;
+    font-size: 0.9em;
+    background-color: var(--bg-blueprint-dark);
+    border: 1px solid var(--border-color-medium);
+    color: var(--text-primary-on-dark);
+    border-radius: var(--border-radius-tech);
+    font-family: var(--font-mono);
+    width: 100%;
+    box-sizing: border-box;
+    transition: all var(--transition-main);
+}
+#activityInputTable td input:focus,
+#activityInputTable input.calculated-field:focus {
+    border-color: var(--accent-electric-blue);
+    box-shadow: 0 0 0 2px rgba(var(--accent-electric-blue-rgb, 0, 191, 255), 0.25), inset 0 0 4px rgba(var(--accent-electric-blue-rgb, 0, 191, 255), 0.1);
+    outline: none;
+    background-color: var(--bg-blueprint-medium);
+}
+#activityInputTable input.calculated-field {
+    background-color: var(--bg-blueprint-medium); /* Slightly different from editable */
+    font-style: italic;
+    color: var(--text-secondary-on-dark);
+    cursor: default;
+}
+
+.table-actions { /* Container for Add Activity/Load Sample buttons */
+    margin-top: 15px;
+    margin-bottom: 25px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+}
+
+/* === Input Fields & Textarea (General) === */
+.app-container input[type="text"], /* For general text inputs if any */
+.app-container input[type="number"], /* For general number inputs if any */
+.app-container input[type="date"], /* For Gantt start date input */
+.app-container textarea#logArea {
+    padding: 10px 14px;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--border-color-dark); /* Darker border for contrast */
+    border-radius: var(--border-radius-tech);
+    font-size: 0.95em;
+    background-color: var(--bg-blueprint-dark);
+    color: var(--text-primary-on-dark);
+    font-family: var(--font-technical);
+    transition: border-color var(--transition-main), box-shadow var(--transition-main), background-color var(--transition-main);
+    margin-bottom: 10px;
+}
+
+.app-container input[type="text"]:focus,
+.app-container input[type="number"]:focus,
+.app-container input[type="date"]:focus,
+.app-container textarea#logArea:focus {
+    border-color: var(--accent-electric-blue);
+    outline: 0;
+    box-shadow: var(--shadow-glow);
+    background-color: var(--bg-blueprint-medium); /* Lighten on focus */
+}
+
+.app-container textarea#logArea {
+    min-height: 180px;
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    resize: vertical;
+    line-height: 1.6;
+    white-space: pre-wrap; /* Important for log readability */
+}
+
+/* === Buttons === */
+.app-container button,
+.app-container .button-like-label {
+    padding: 10px 22px;
+    font-size: 0.9em;
+    font-weight: 600;
+    border: 1px solid transparent; /* Start with transparent, specific buttons add color */
+    border-radius: var(--border-radius-tech);
+    cursor: pointer;
+    transition: all var(--transition-main);
+    margin-right: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 1.5;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-family: var(--font-technical);
+    box-shadow: var(--shadow-depth);
+    user-select: none;
+}
+.app-container button:hover,
+.app-container .button-like-label:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 7px 22px rgba(0,0,0,0.3), var(--shadow-glow); /* More pronounced hover shadow */
+}
+.app-container button:active,
+.app-container .button-like-label:active {
+    transform: translateY(0px) scale(1);
+    box-shadow: var(--shadow-depth); /* Reset shadow on active */
+}
+
+/* Primary action button style (Calculate, Load as primary) */
+#calculateInitialBtn,
+.button-like-label.btn-primary-action { /* Specific class for label */
+    background: linear-gradient(45deg, var(--accent-electric-blue), var(--accent-tech-purple));
+    color: #fff;
+    border-color: var(--accent-tech-purple); /* Match gradient end */
+}
+#calculateInitialBtn:hover,
+.button-like-label.btn-primary-action:hover {
+    background-size: 150% 150%; /* Blueprint theme's CTA hover effect */
+}
+
+/* Info / Add / Load Sample button style */
+#addActivityBtn, #loadSampleBtn {
+    background-color: var(--accent-tech-purple);
+    color: #fff;
+    border-color: var(--accent-electric-blue); /* Contrasting border */
+}
+#addActivityBtn:hover, #loadSampleBtn:hover {
+    background-color: var(--accent-electric-blue);
+    border-color: var(--accent-tech-purple);
+}
+
+/* Crash Step button style (Warning/Action) */
+#crashStepBtn {
+    background-color: var(--accent-cyber-orange);
+    color: var(--bg-blueprint-dark); /* For better contrast on orange */
+    border-color: transparent;
+}
+.light-theme #crashStepBtn { color: #fff; }
+#crashStepBtn:hover {
+    background-color: color-mix(in srgb, var(--accent-cyber-orange) 90%, white); /* Lighter orange */
+    box-shadow: 0 5px 18px rgba(var(--accent-cyber-orange-rgb, 255, 153, 0), 0.4), var(--shadow-glow);
+}
+
+/* Reset/Danger button style */
+#resetBtn {
+    background-color: transparent;
+    color: var(--accent-cyber-orange);
+    border: 1px solid var(--accent-cyber-orange);
+}
+#resetBtn:hover {
+    background-color: var(--accent-cyber-orange);
+    color: var(--bg-blueprint-dark);
+    .light-theme & { color: #fff; }
+}
+
+/* Export/Neutral/Gantt Redraw button style */
+#exportInputBtnJSON, #exportInputBtnCSV, #exportReportPDFBtn, #redrawGanttBtn {
+    background-color: var(--bg-blueprint-light); /* Subtle button */
+    color: var(--text-primary-on-dark);
+    border: 1px solid var(--border-color-medium);
+}
+#exportInputBtnJSON:hover, #exportInputBtnCSV:hover, #exportReportPDFBtn:hover, #redrawGanttBtn:hover {
+    border-color: var(--accent-electric-blue);
+    color: var(--accent-electric-blue);
+    background-color: var(--bg-blueprint-medium); /* Darken slightly on hover */
+}
+
+.button-like-label { display: inline-block; } /* Ensure it behaves like a button */
+
+
+/* === Results Display === */
+.results-grid-container {
+    padding: 20px 25px;
+}
+.results-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px 20px;
+    margin-bottom: 20px;
+    font-family: var(--font-technical);
+}
+.results-grid > div:nth-child(odd) { /* Label */
+    font-weight: 500;
+    color: var(--text-secondary-on-dark);
+    text-align: right;
+}
+.results-grid > div:nth-child(even) { /* Value */
+    color: var(--text-primary-on-dark);
+    font-family: var(--font-mono);
+    font-weight: 500;
+}
+.output-value {
+    font-weight: 700;
+    color: var(--accent-glow-green);
+    letter-spacing: 0.5px;
+}
+/* To use data-unit for $ or units text before value */
+.output-value::before {
+    content: attr(data-unit) " ";
+    font-weight: 400; /* Lighter weight for the unit/currency symbol */
+    color: var(--text-secondary-on-dark); /* Muted color for the unit */
+    font-family: var(--font-technical); /* Match other text */
+    padding-right: 2px;
+}
+
+
+.critical-path-info {
+    padding: 15px 20px;
+    margin-bottom: 0; /* No margin if last item in .results-grid-container */
+    background-color: rgba(var(--accent-cyber-orange-rgb, 255, 153, 0), 0.08);
+    border: 1px solid var(--border-color-medium);
+    border-left: 4px solid var(--accent-cyber-orange);
+    border-radius: var(--border-radius-tech);
+    color: var(--text-secondary-on-dark);
+    font-size: 0.95em;
+    font-family: var(--font-mono);
+}
+.critical-path-info strong {
+    color: var(--accent-cyber-orange);
+    font-family: var(--font-technical);
+}
+
+/* === Activity Details Table Highlighting === */
+#activityDetailsTableBody tr.critical-true td { /* .app-table is on the table */
+    background-color: rgba(var(--accent-cyber-orange-rgb, 255, 153, 0), 0.15) !important; /* Make sure RGB vars are in main theme */
+    color: var(--text-primary-on-dark) !important;
+    font-weight: 500;
+}
+#activityDetailsTableBody tr.critical-true td:first-child {
+    font-weight: 700;
+}
+
+/* === Gantt Chart Area === */
+.gantt-controls { /* This div uses .controls class, which is already styled */
+    display: flex; /* Overriding stack from .controls for this specific case if needed */
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-top: 5px; /* Less padding if inside a .controls styled div */
+    padding-bottom: 15px;
+}
+.gantt-controls label {
+    color: var(--text-secondary-on-dark);
+    font-size: 0.9em;
+    margin-right: 5px;
+}
+.gantt-controls input[type="date"] { /* Specific styling for this date input */
+    width: auto;
+    flex-grow: 1;
+    max-width: 180px;
+    padding: 8px 10px;
+    font-size: 0.9em;
+    /* Other styles inherited from general input[type="date"] */
+}
+.gantt-controls button {
+    flex-shrink: 0;
+}
+
+.app-container .gantt-container { /* Wrapper for the Gantt SVG */
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color-dark);
+    border-radius: var(--border-radius-tech);
+    background-color: var(--bg-blueprint-dark); 
+    min-height: 380px; /* This is important! */
+    overflow: hidden; /* Crucial to contain the SVG if it tries to be larger */
+    padding: 10px; 
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+    display: block; /* Explicitly block */
+    position: relative; /* Good for robust child positioning */
+}
+.light-theme .app-container .gantt-container {
+    background-color: var(--bg-blueprint-light); 
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+}
+
+#ganttChartContainer { /* The SVG element itself */
+    width: 100%;
+    display: block; 
+    /* REMOVE min-height from here; let Frappe Gantt determine its own height or fill the parent */
+    /* min-height: 360px; */ 
+    font-family: var(--font-technical);
+}
+
+/* Message if Gantt is empty (JS adds <p class="gantt-empty-message">) */
+.app-container p.gantt-empty-message {
+    text-align: center;
+    padding: 30px 20px;
+    font-family: var(--font-technical);
+    font-size: 1.05em;
+    color: var(--text-secondary-on-dark);
+    border: 2px dashed var(--border-color-medium);
+    border-radius: var(--border-radius-tech);
+    background-color: var(--bg-blueprint-medium);
+    margin: 10px 0;
+}
+
+/* Frappe Gantt internal styling overrides */
+#ganttChartContainer .bar-critical .bar { fill: var(--accent-cyber-orange) !important; }
+#ganttChartContainer .bar-critical .bar-progress { fill: color-mix(in srgb, var(--accent-cyber-orange) 70%, black) !important; }
+#ganttChartContainer .bar-normal .bar { fill: var(--accent-electric-blue) !important; }
+#ganttChartContainer .bar-normal .bar-progress { fill: color-mix(in srgb, var(--accent-electric-blue) 70%, black) !important; }
+
+#ganttChartContainer .grid-header { fill: var(--bg-blueprint-medium) !important; }
+#ganttChartContainer .grid-row { fill: transparent !important; } /* Or var(--bg-blueprint-dark) for very subtle rows */
+#ganttChartContainer .grid-body .grid-line { stroke: var(--border-color-medium) !important; stroke-opacity: 0.5 !important; }
+#ganttChartContainer .tick { stroke: var(--text-muted-on-dark) !important; stroke-width: 1 !important; shape-rendering: crispEdges; }
+#ganttChartContainer .lower-text,
+#ganttChartContainer .upper-text { fill: var(--text-secondary-on-dark) !important; font-family: var(--font-mono) !important; font-size: 11px !important; }
+#ganttChartContainer .bar-label { fill: var(--bg-blueprint-dark) !important; font-family: var(--font-technical) !important; font-size: 10px !important; font-weight: 500 !important; }
+.light-theme #ganttChartContainer .bar-label { fill: #fff !important; }
+
+/* Frappe Gantt Popup */
+.gantt-popup-wrapper {
+    background-color: var(--bg-blueprint-light) !important;
+    border: 1px solid var(--border-color-dark) !important;
+    box-shadow: var(--shadow-depth), var(--shadow-glow) !important; /* Enhanced shadow for popup */
+    border-radius: var(--border-radius-tech) !important;
+    padding: 12px 15px !important;
+    font-family: var(--font-technical) !important;
+    font-size: 13px !important;
+    color: var(--text-secondary-on-dark) !important;
+    z-index: 2500 !important; /* High z-index */
+    max-width: 320px; /* Constrain popup width */
+}
+.gantt-popup-wrapper h5 { /* Title in popup */
+    margin-top: 0 !important; margin-bottom: 8px !important;
+    font-size: 15px !important; color: var(--text-accent-highlight) !important;
+    font-family: var(--font-display) !important; font-weight: normal !important;
+}
+.gantt-popup-wrapper p { /* Paragraphs in popup */
+    margin: 4px 0 !important;
+    font-size: 12px !important; line-height: 1.4 !important;
+    color: var(--text-secondary-on-dark) !important;
+}
+.gantt-popup-wrapper p strong { color: var(--text-primary-on-dark) !important; }
+
+
+/* === Responsive Adjustments for the App Page === */
+@media (max-width: 768px) {
+    body.app-body {
+        padding-top: calc(var(--header-height) + 10px); /* Adjust if header is present and fixed */
+        font-size: 14px;
+    }
+    /* If not replicating header, this might be:
+    body.app-body { padding: 10px; font-size: 14px; }
+    */
+
+    .app-container {
+        padding: 20px 15px;
+        margin: 15px auto;
+    }
+    .app-container h1 { font-size: 2em; margin-bottom: 25px; padding-bottom: 15px;}
+    .app-container h2 { font-size: 1.5em; margin-top: 30px; margin-bottom: 20px;}
+
+    .controls, .app-container .gantt-controls { /* Stack controls sections */
+        flex-direction: column;
+    }
+    .app-container .controls button,
+    .app-container .controls .button-like-label,
+    .app-container .gantt-controls button,
+    .app-container .gantt-controls input[type="date"] {
+        width: 100%;
+        margin-right: 0;
+        margin-left: 0; /* Ensure full width */
+    }
+    .app-container .gantt-controls input[type="date"] {
+        max-width: none; /* Allow full width */
+    }
+
+    .results-grid {
+        grid-template-columns: 1fr; /* Stack results */
+    }
+    .results-grid > div:nth-child(odd) { /* Labels in stacked grid */
+        text-align: left;
+        margin-bottom: -5px;
+        font-weight: 600;
+        color: var(--text-primary-on-dark);
+    }
+
+    #activityInputTable th, #activityInputTable td,
+    .app-table th, .app-table td { /* General app tables */
+        font-size: 0.85em;
+        padding: 7px 9px;
+    }
+    #activityInputTable .delete-btn {
+        padding: 4px 8px;
+        font-size: 0.75em;
+    }
+}
+
+@media (max-width: 480px) {
+    .app-container { padding: 15px 10px; }
+    .app-container h1 { font-size: 1.7em; }
+    .app-container h2 { font-size: 1.3em; }
+
+    .app-container button, .app-container .button-like-label {
+        padding: 10px 18px;
+        font-size: 0.85em;
+        letter-spacing: 0.5px;
+    }
+    #activityInputTable th, #activityInputTable td,
+    .app-table th, .app-table td {
+        font-size: 0.78em;
+        padding: 5px 7px;
+    }
+    .app-container textarea#logArea {
+        font-size: 0.8em;
+        min-height: 150px;
+    }
+}
+
+/* Helper RGB variables - these should ideally be in your MAIN Blueprint theme CSS */
+:root {
+    --accent-electric-blue-rgb: 0, 191, 255;
+    --accent-cyber-orange-rgb: 255, 153, 0;
+    --accent-glow-green-rgb: 57, 255, 20;
+    --accent-tech-purple-rgb: 159, 112, 253;
+}
+.light-theme {
+    --accent-electric-blue-rgb: 0, 123, 255;
+    --accent-cyber-orange-rgb: 253, 126, 20;
+    --accent-glow-green-rgb: 40, 167, 69;
+    --accent-tech-purple-rgb: 111, 66, 193;
+}

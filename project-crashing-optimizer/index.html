@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Crashing Optimizer - ConStruct Digital Lab</title>
+    
+    <!-- 1. Link to the MAIN Blueprint Theme CSS (adjust path if necessary) -->
+    <link rel="stylesheet" href="../style.css"> 
+    
+    <!-- 2. Link to THIS APP's specific themed CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Frappe Gantt CSS (keep this) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/frappe-gantt@0.6.1/dist/frappe-gantt.css">
+    
+    <!-- Font Awesome (if you want to use icons consistent with the homepage in this app's UI, though not strictly required by current app UI) -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> -->
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9N53JQKNBQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-9N53JQKNBQ');
+    </script>
+</head>
+<!-- Add 'blueprint-theme' for default dark, or JS can toggle 'light-theme' -->
+<!-- Add 'app-body' for potential specific body targeting not covered by main theme -->
+<body class="blueprint-theme app-body"> 
+
+    <!-- OPTIONAL: Replicate a simplified homepage header here for full consistency -->
+    <!-- <header class="lab-header"> ... </header> -->
+
+    <!-- Changed class from 'container' to 'app-container' to match the themed CSS -->
+    <div class="app-container"> 
+        <h1>Project Crashing Optimizer</h1>
+
+        <div class="info-box">
+            <h2>About this Tool</h2>
+            <p>This tool helps project managers analyze cost and schedule trade-offs using the <strong>crashing technique</strong>. Input your project activities, their normal and crash parameters, and their dependencies. The tool will calculate the critical path and allow you to iteratively crash activities to shorten the project duration in the most cost-effective way. This approach aligns with principles from the <strong>PMBOK® Guide</strong> (Schedule Compression) and <strong>AACE International</strong> (Total Cost Management Framework).</p>
+            <p><strong>Note:</strong> This tool assumes linear cost-per-unit-time for crashing. It does not explicitly model complex resource constraints beyond cost. Always validate results with comprehensive project analysis. Ensure Normal Duration ≥ Crash Duration and Crash Cost ≥ Normal Cost for valid calculations.</p>
+        </div>
+
+        <h2>1. Input Project Activities</h2>
+        <div class="table-container">
+            <!-- Added 'app-table' class to tables for Blueprint styling -->
+            <table id="activityInputTable" class="app-table">
+                <colgroup>
+                    <col style="width: 5%;">  <!-- ID -->
+                    <col style="width: 15%;"> <!-- Activity Name -->
+                    <col style="width: 15%;"> <!-- Predecessors -->
+                    <col style="width: 9%;">  <!-- Normal Duration -->
+                    <col style="width: 9%;">  <!-- Normal Cost -->
+                    <col style="width: 9%;">  <!-- Crash Duration -->
+                    <col style="width: 9%;">  <!-- Crash Cost -->
+                    <col style="width: 9%;">  <!-- Max Crash -->
+                    <col style="width: 12%;"> <!-- Cost/Unit Crash -->
+                    <col style="width: 8%;">  <!-- Actions -->
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Activity Name</th>
+                        <th>Predecessors<br>(ID[Type+/-Lag])</th>
+                        <th>Normal Duration (units)</th>
+                        <th>Normal Cost ($)</th>
+                        <th>Crash Duration (units)</th>
+                        <th>Crash Cost ($)</th>
+                        <th>Max Crash (auto)</th>
+                        <th>Cost/Unit Crash (auto)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="activityTableBody">
+                    <!-- Activity rows will be added here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        <div class="table-actions"> <!-- This div can be styled to group buttons -->
+            <button type="button" id="addActivityBtn">Add Activity Row</button>
+            <button type="button" id="loadSampleBtn">Load Sample Data</button>
+        </div>
+
+
+        <h2>2. Control Panel</h2>
+        <div class="controls">
+            <button type="button" id="calculateInitialBtn">Calculate Initial Schedule</button>
+            <button type="button" id="crashStepBtn">Crash One Step</button>
+            <button type="button" id="resetBtn">Reset All Data</button>
+            <hr> <!-- This hr will pick up Blueprint styling -->
+            <label for="loadInputFile" class="button-like-label btn-primary-action">Load Input Data (JSON/CSV)</label>
+            <input type="file" id="loadInputFile" accept=".json,.csv" style="display: none;">
+            <button type="button" id="exportInputBtnJSON">Export Input (JSON)</button>
+            <button type="button" id="exportInputBtnCSV">Export Input (CSV)</button>
+            <button type="button" id="exportReportPDFBtn">Export Report (PDF)</button>
+        </div>
+
+        <h2>3. Project Status & Results</h2>
+        <div class="results-grid-container">
+            <div class="results-grid">
+                <div>Initial Project Duration:</div><div id="initialDurationDisplay" class="output-value" data-unit="units">N/A</div>
+                <div>Initial Project Cost:</div><div><span id="initialCostDisplay" class="output-value" data-unit="$">N/A</span></div>
+                <div>Current Project Duration:</div><div id="currentDurationDisplay" class="output-value" data-unit="units">N/A</div>
+                <div>Current Total Cost:</div><div><span id="currentCostDisplay" class="output-value" data-unit="$">N/A</span></div>
+                <div>Total Crash Cost Added:</div><div><span id="totalCrashCostDisplay" class="output-value" data-unit="$">0.00</span></div>
+            </div>
+            <div id="criticalPathDisplay" class="critical-path-info"><strong>Critical Path(s):</strong> N/A</div>
+        </div>
+        
+        <h2>4. Activity Details & CPM Values</h2>
+        <div class="table-container">
+            <table id="activityDetailsTable" class="app-table"> <!-- Added 'app-table' class -->
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Current Duration</th>
+                        <th>ES</th>
+                        <th>EF</th>
+                        <th>LS</th>
+                        <th>LF</th>
+                        <th>Slack</th>
+                        <th>Crashed Time</th>
+                        <th>Can Crash?</th>
+                        <th>Critical?</th>
+                    </tr>
+                </thead>
+                <tbody id="activityDetailsTableBody">
+                    <!-- Detailed activity status will be shown here -->
+                </tbody>
+            </table>
+        </div>
+
+        <h2>5. Crashing Log</h2>
+        <textarea id="logArea" readonly></textarea>
+
+        <h2>6. Gantt Chart</h2>
+        <div class="controls gantt-controls">
+            <label for="ganttStartDate">Gantt Display Start Date:</label>
+            <input type="date" id="ganttStartDate" name="ganttStartDate">
+            <button type="button" id="redrawGanttBtn">Redraw Gantt</button>
+        </div>
+        <div class="gantt-container"> <!-- Wrapper for SVG, styled by app-specific CSS -->
+            <svg id="ganttChartContainer"></svg>
+        </div>
+
+    </div> <!-- End of .app-container -->
+
+    <!-- OPTIONAL: Replicate a simplified homepage footer here -->
+    <!-- <footer class="lab-footer"> ... </footer> -->
+
+    <!-- External JS Libraries (no change) -->
+    <script src="https://cdn.jsdelivr.net/npm/frappe-gantt@0.6.1/dist/frappe-gantt.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <!-- Your application script (no change to filename or content for styling) -->
+    <script src="js/app.js"></script> 
+</body>
+</html>
