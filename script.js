@@ -78,6 +78,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 'Visualization of Cost-Time Trade-Off Curves.'
             ]
         },
+        {
+            id: 'evm-dashboard', 
+            title: 'EVM Dashboard Pro',
+            category: 'project-management',
+            shortDesc: 'Track project performance with Earned Value Management.',
+            description: 'A comprehensive client-side dashboard for Earned Value Management, enabling detailed tracking of project costs, schedule, performance indices, and profitability with export capabilities.',
+            tags: ['EVM', 'Cost Control', 'Schedule Tracking', 'Performance Analysis', 'Reporting'],
+            ghPagesUrl: 'evm-dashboard/index.html', 
+            thumbnailImage: 'images/evm_dashboard_thumb.png', 
+            coverImage: 'images/evm_dashboard_cover.png',   
+            icon: 'fas fa-chart-pie', 
+            features: [
+                'Detailed Bid Item Data Entry.',
+                'Cost-Based EVM Calculations (PV, EV, AC, SV, CV, SPI, CPI).',
+                'Itemized Profit & Contract Value Tracking.',
+                'Interactive Dashboard with S-Curves & KPI Trends.',
+                'Excel Data Export & PDF Reporting.',
+                'Collapsible Navigation & User-Friendly Interface.'
+            ]
+        }
         // For Geo-Tech 
         /* {
             id: 'soil-analyzer', title: 'Soil Stability Analyzer', category: 'geo-tech',
