@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVM Dashboard</title>
+    <link rel="stylesheet" href="../style.css"> <!-- Main Lab Stylesheet -->
+    <link rel="stylesheet" href="css/style.css"> <!-- EVM Specific Styles (this new one) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7HY7TMYF10"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-7HY7TMYF10');
+    </script>
+</head>
+<body>
+
+    <div class="top-toolbar">
+        <div class="toolbar-left-section">
+            <a href="../index.html" class="btn-toolbar-icon" title="Back to ConStruct Digital Lab"><i class="fas fa-chevron-left"></i></a> 
+            <button id="leftNavToggleBtn" class="btn-toolbar-icon" title="Toggle Navigation Panel">☰</button>
+            <span class="toolbar-logo">EVM Dashboard</span>
+        </div>
+        <div class="toolbar-actions">
+            <button id="saveAllProjectsBtn" class="btn-toolbar">Save Data</button>
+            <button id="loadAllProjectsBtn" class="btn-toolbar">Load JSON</button>
+            <button id="importExcelBtn" class="btn-toolbar">Import Excel</button>
+            <button id="loadSampleDataBtn" class="btn-toolbar">Load Sample Data</button>
+            <button id="exportToExcelBtn" class="btn-toolbar">Export Excel</button>
+            <button id="exportToPdfBtn" class="btn-toolbar">Export PDF</button>
+        </div>
+        <!-- Hidden file inputs -->
+        <input type="file" id="allProjectsFileUploader" accept=".json" style="display:none;">
+        <input type="file" id="excelFileUploader" accept=".xlsx, .xls, .csv" style="display:none;">
+    </div>
+
+    <div class="page-wrapper"> <!-- This will get 'left-nav-collapsed' or 'left-nav-expanded' -->
+        <aside class="left-nav-panel">
+            <div class="panel-header">
+                <h3>Projects & Periods</h3>
+                <button id="addNewProjectBtn" class="icon-btn" title="Add New Project">+</button>
+            </div>
+            <div id="projectListContainer"></div>
+        </aside>
+
+        <div class="main-content-area-container"> <!-- New wrapper for main content -->
+            <div class="main-content-wrapper">
+                <header id="project-info-header">
+                    <h2>Project: <span id="currentProjectNameDisplay" class="header-value">N/A</span> | Period: <span id="currentPeriodDisplay" class="header-value">N/A</span></h2>
+                    <div class="project-info-grid">
+                        <div><label for="projNo">Project Number:</label><input type="text" id="projNo"></div>
+                        <div><label for="projNameHeaderInput">Project Name:</label><input type="text" id="projNameHeaderInput"></div>
+                        <div><label for="clientName">Client Name:</label><input type="text" id="clientName"></div>
+                        <div><label for="consultantName">Consultant Name:</label><input type="text" id="consultantName"></div>
+                        <div><label for="contractType">Type of Contract:</label><input type="text" id="contractType"></div>
+                        <div><label for="projScheduledDays">Scheduled Days:</label><input type="number" id="projScheduledDays" placeholder="e.g., 180"></div>
+                        <div><label for="globalStatusDate">Period Status Date:</label> <input type="date" id="globalStatusDate"></div>
+                    </div>
+                </header>
+                <main id="main-content">
+                    <div class="tab-navigation">
+                        <button class="tab-link active" onclick="openTab(event, 'dataEntryTab')">Period Data Entry</button>
+                        <button class="tab-link" onclick="openTab(event, 'evmResultsTab')">Period EVM Results</button>
+                        <button class="tab-link" onclick="openTab(event, 'dashboardTab')">Dashboard</button>
+                    </div>
+
+                    <div id="dataEntryTab" class="tab-content active-content">
+                        <h3>Period Data: <span class="current-period-title-tab header-value">N/A</span></h3>
+                        <div class="data-entry-controls">
+                            <button id="addBidItemRowBtn" class="btn-primary">Add Bid Item</button>
+                            <button id="calculateAllBtn" class="btn-secondary">Calculate Period</button>
+                        </div>
+                        <div class="table-container">
+                            <table id="bidItemTable">
+                                <thead>
+                                    <tr>
+                                        <th title="Row Number">#</th>
+                                        <th title="Bid Item Number from your estimate/WBS">Item No.</th>
+                                        <th title="Description of the Bid Item / Work Package">Description</th>
+                                        <th title="Unit of Measure (e.g., LS, EA, HR, M2)">Unit</th>
+                                        <th title="Total quantity for this item as per contract.">Total Contract Qty</th>
+                                        <th title="Contractor's internal cost per unit for this item.">Unit Cost</th>
+                                        <th title="Price per unit charged to client (Contract Price)">Unit Contract Price</th>
+                                        <th title="Total Cost Budget for this item (Total Contract Qty * Unit Cost). This is the item's BAC.">Total Cost Budget (Item)</th>
+                                        <th title="Total Contract Price for this item (Total Contract Qty * Unit Contract Price).">Total Contract Price (Item)</th>
+                                        <th title="Planned Profit for this item (Total Contract Price - Total Cost Budget).">Planned Profit (Item)</th>
+                                        <th title="Quantity of this item planned to be completed IN THIS PERIOD according to your cost baseline schedule.">Planned Qty (Period)</th>
+                                        <th title="Planned Value (based on cost) for this item IN THIS PERIOD (Planned Qty Period * Unit Cost).">PV (Cost - Period)</th>
+                                        <th title="Total units of this item completed TO DATE (cumulative).">Units Done (To Date)</th>
+                                        <th title="Overall % completion for this item (Units Done To Date / Total Contract Qty).">% Comp (To Date)</th>
+                                        <th title="Total Earned Value (based on cost) for this item TO DATE (Total Cost Budget Item * % Comp To Date).">EV (Cost - To Date)</th>
+                                        <th title="Total Actual Cost incurred for this item TO DATE (cumulative).">AC (To Date)</th>
+                                        <th class="action-cell-header" title="Action">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bidItemTableBody">
+                                    <!-- Rows will be added by JS. Example structure of a row generated by JS:
+                                    <tr>
+                                        <td>1</td>
+                                        <td class="editable" data-field="itemNumber">A100</td>
+                                        <td class="editable" data-field="description">Site Mob</td>
+                                        <td class="editable" data-field="unit">LS</td>
+                                        <td class="editable numeric" data-field="totalContractQty">1</td>
+                                        <td class="editable numeric" data-field="unitCost">4000</td>
+                                        <td class="editable numeric" data-field="unitContractPrice">5000</td>
+                                        <td class="calculated bid-item-total-cost-budget">4000.00</td>
+                                        <td class="calculated bid-item-total-contract-price">5000.00</td>
+                                        <td class="calculated bid-item-planned-profit">1000.00</td>
+                                        <td class="editable numeric" data-field="plannedQty_period">1</td>
+                                        <td class="calculated bid-item-pv-cost-period">4000.00</td>
+                                        <td class="editable numeric" data-field="unitsCompleted_toDate">1</td>
+                                        <td class="calculated bid-item-percent-complete-toDate">100.00%</td>
+                                        <td class="calculated bid-item-ev-cost-toDate">4000.00</td>
+                                        <td class="editable numeric" data-field="actualCost_toDate">3800</td>
+                                        <td class="action-cell"><button class="delete-row-btn icon-btn-tiny">X</button></td>
+                                    </tr>
+                                    -->
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="7" class="total-label">Project Totals (from items on this page):</td>
+                                        <td id="footerTotalCostBudget">0.00</td>
+                                        <td id="footerTotalContractPrice">0.00</td>
+                                        <td id="footerTotalPlannedProfit">0.00</td>
+                                        <td></td> 
+                                        <td id="footerTotalPVPeriod_Cost">0.00</td>
+                                        <td></td> 
+                                        <td></td> 
+                                        <td id="footerTotalEVToDate_Cost">0.00</td>
+                                        <td id="footerTotalACToDate">0.00</td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="evmResultsTab" class="tab-content">
+                        <h3>EVM Metrics (Cost-Based): <span class="current-period-title-tab header-value">N/A</span></h3>
+                        
+                        <div class="results-layout-grid"> <!-- NEW: Grid for sections -->
+                            <div class="results-column"> <!-- NEW: Column 1 -->
+                                <div class="results-section card-style"> <!-- Added card-style -->
+                                    <h4>Period Performance (Cost-Based)</h4>
+                                    <div class="results-summary-grid period-metrics-grid">
+                                        <div>PV (Period - Cost): <span id="resPV_Cost" class="metric-value">-</span></div>
+                                        <div>EV (Period - Cost): <span id="resEV_Cost" class="metric-value">-</span></div>
+                                        <div>AC (Period): <span id="resAC_Cost" class="metric-value">-</span></div>
+                                        <div>SV (Period - Cost): <span id="resSV_Cost" class="metric-value">-</span></div>
+                                        <div>CV (Period - Cost): <span id="resCV_Cost" class="metric-value">-</span></div>
+                                        <div>SPI (Period - Cost): <span id="resSPI_Cost" class="metric-value">-</span></div>
+                                        <div>CPI (Period - Cost): <span id="resCPI_Cost" class="metric-value">-</span></div>
+                                    </div>
+                                </div>
+
+                                <div class="results-section card-style"> <!-- Added card-style -->
+                                    <h4>Project Margin Analysis</h4>
+                                    <div class="results-summary-grid margin-grid">
+                                        <div>Total Contract Value: <span id="resTotalContractValue" class="metric-value">-</span></div>
+                                        <div>Total Planned Profit: <span id="resTotalPlannedProfit" class="metric-value">-</span> (<span id="resTotalPlannedProfitPercent" class="metric-value">-</span>%)</div>
+                                        <div>Est. Profit at Completion: <span id="resEstProfitAtCompletion" class="metric-value">-</span> (<span id="resEstProfitAtCompletionPercent" class="metric-value">-</span>%)</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="results-column"> <!-- NEW: Column 2 -->
+                                <div class="results-section card-style"> <!-- Added card-style -->
+                                    <h4>Project Cumulative & Forecast (Cost-Based)</h4>
+                                    <div class="results-summary-grid project-metrics-grid">
+                                        <div>Project BAC (Cost): <span id="resBAC_Cost" class="metric-value">-</span></div>
+                                        <div>EAC (Basic - Cost): <span id="resEAC_basic_Cost" class="metric-value">-</span></div>
+                                        <div>EAC (Alt - Cost): <span id="resEAC_alt1_Cost" class="metric-value">-</span></div>
+                                        <div>VAC (Cost): <span id="resVAC_Cost" class="metric-value">-</span></div>
+                                        <div>TCPI (to BAC - Cost): <span id="resTCPI_BAC_Cost" class="metric-value">-</span></div>
+                                    </div>
+                                </div>
+
+                                <div class="evm-footnote card-style"> <!-- Added card-style -->
+                                    <h4>Abbreviations Guide:</h4>
+                                    <ul>
+                                        <!-- ... your li items ... -->
+                                        <li><strong>BAC:</strong> Budget at Completion (Total Project Cost Budget)</li>
+                                        <li><strong>PV:</strong> Planned Value (Cost-Based)</li>
+                                        <li><strong>EV:</strong> Earned Value (Cost-Based)</li>
+                                        <li><strong>AC:</strong> Actual Cost</li>
+                                        <li><strong>SV:</strong> Schedule Variance (EV - PV)</li>
+                                        <li><strong>CV:</strong> Cost Variance (EV - AC)</li>
+                                        <li><strong>SPI:</strong> Schedule Performance Index (EV / PV)</li>
+                                        <li><strong>CPI:</strong> Cost Performance Index (EV / AC)</li>
+                                        <li><strong>EAC:</strong> Estimate at Completion (Forecasted final project cost)</li>
+                                        <li><strong>VAC:</strong> Variance at Completion (Project BAC - Project EAC)</li>
+                                        <li><strong>TCPI:</strong> To-Complete Performance Index (Cost-Based)</li>
+                                        <li><em>(Period) denotes metrics for the selected reporting period.</em></li>
+                                        <li><em>(Cum.) denotes cumulative project-to-date metrics.</em></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div> <!-- END results-layout-grid -->
+                    </div>
+
+                    <div id="dashboardTab" class="tab-content">
+                        <div class="dashboard-header">
+                            <h3>EVM REPORT (Cost-Based) | Project: <span id="dashboardProjectName" class="header-value">N/A</span> | Period: <span id="dashboardStatusDate" class="header-value">N/A</span></h3>
+                        </div>
+
+                        <div class="dashboard-grid">
+                            <!-- 
+                                The 'dashboard-sidebar' was previously hidden. 
+                                If you don't plan to use a sidebar for chart type selection or filters on the dashboard, 
+                                you can remove this div entirely. 
+                                If you keep it, ensure its CSS makes it behave as intended (e.g., fixed width, or display:none).
+                            -->
+                            <!-- <div class="dashboard-sidebar" style="display:none;"> 
+                                <div class="nav-icon" title="Settings">⚙️</div>
+                            </div> -->
+
+                            <div class="dashboard-main-area">
+                                <!-- Row 1: Period Progress & Period KPIs -->
+                                <div class="dashboard-row">
+                                    <div class="chart-card" id="currentProgressCard">
+                                        <h4>PERIOD PROGRESS (Cost-Based)</h4>
+                                        <div class="progress-flex">
+                                            <div id="overallProgressDonut" class="chart-placeholder">
+                                                <!-- ApexCharts will render here -->
+                                            </div>
+                                            <div class="progress-text">
+                                                Planned for Period (Cost PV): <span id="plannedPeriodProgress" class="metric-value">--</span><br/>
+                                                Achieved in Period (Cost EV): <span id="actualPeriodProgress" class="metric-value">--</span>
+                                            </div>
+                                        </div>
+                                        <div id="progressDeviationChart" class="chart-placeholder sm-chart">
+                                            <!-- ApexCharts will render here -->
+                                        </div>
+                                    </div>
+                                    <div class="chart-card" id="performanceKpisCard">
+                                        <h4>PERIOD KPIs (Cost-Based)</h4>
+                                        <div class="kpi-gauges">
+                                            <div id="cpiGaugePeriod" class="chart-placeholder gauge-placeholder">
+                                                <!-- ApexCharts will render here -->
+                                            </div>
+                                            <div id="spiGaugePeriod" class="chart-placeholder gauge-placeholder">
+                                                <!-- ApexCharts will render here -->
+                                            </div>
+                                        </div>
+                                        <p id="kpiNarrative">Awaiting data for KPI narrative...</p>
+                                    </div>
+                                </div>
+
+                                <!-- Row 2: S-Curve (Full Width) -->
+                                <div class="dashboard-row">
+                                    <div class="chart-card wide-card" id="earnedValueCard">
+                                        <h4>CUMULATIVE PROJECT PERFORMANCE (S-Curve - Cost-Based)</h4>
+                                        <div class="ev-header">
+                                            <span>Project Cum. Values | EV (Cost) vs PV (Cost) vs AC</span>
+                                            <span class="total-ev-display">Project Total EV (Cost): <strong id="dashTotalEV" class="metric-value">0</strong></span>
+                                            <span class="project-percent-complete-display">Project % Complete: <strong id="dashProjectPercentComplete" class="metric-value">0.0</strong>%</span>
+                                        </div>
+                                        <div id="sCurveChart" class="chart-placeholder lg-chart">
+                                            <!-- ApexCharts will render here -->
+                                        </div>
+                                        <div class="ev-summary">
+                                            Project SV (Cost): <span id="dashSVValue" class="metric-value">-</span> |
+                                            Project CV (Cost): <span id="dashCVValue" class="metric-value">-</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Row 3: KPI Trends & Variance Trends -->
+                                <div class="dashboard-row">
+                                    <div class="chart-card" id="kpiTrendCard">
+                                        <h4>CUMULATIVE KPI TRENDS (Cost-Based)</h4>
+                                        <div id="kpiTrendChart" class="chart-placeholder">
+                                            <!-- ApexCharts will render here -->
+                                        </div>
+                                    </div>
+                                    <div class="chart-card" id="varianceCard">
+                                        <h4>CUMULATIVE VARIANCE TRENDS (Cost-Based)</h4>
+                                        <div id="varianceChart" class="chart-placeholder">
+                                            <!-- ApexCharts will render here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> <!-- End .dashboard-main-area -->
+                        </div> <!-- End .dashboard-grid -->
+                    </div> <!-- End #dashboardTab -->
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast, Modal, Scripts ... -->
+    <script src="js/uiUtils.js"></script>
+    <script src="js/leftNavPanel.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/dataEntry.js"></script>
+    <script src="js/evmCalculations.js"></script>
+    <script src="js/resultsDisplay.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script>
+        // ... (Global state vars) ...
+        let leftNavToggleInitialized = false;
+
+        function initializeLeftNavToggle() {
+            // ... (JS from previous response, using '.page-wrapper' and 'left-nav-collapsed') ...
+             if (leftNavToggleInitialized) { return; }
+
+            const toggleBtn = document.getElementById('leftNavToggleBtn');
+            const pageWrapper = document.querySelector('.page-wrapper'); // Target for class toggle
+            const LS_COLLAPSED_KEY = 'evmProLeftNavCollapsed';
+
+            if (toggleBtn && pageWrapper) {
+                console.log("[LAYOUT] Initializing Left Nav Toggle functionality.");
+
+                // Set initial state based on localStorage or default to expanded
+                const initiallyCollapsed = localStorage.getItem(LS_COLLAPSED_KEY) === 'true';
+                if (initiallyCollapsed) {
+                    pageWrapper.classList.add('left-nav-collapsed');
+                    toggleBtn.innerHTML = '☰'; // Menu icon (to open)
+                } else {
+                    pageWrapper.classList.remove('left-nav-collapsed'); // Ensure it's expanded
+                    pageWrapper.classList.add('left-nav-expanded'); // Explicitly add expanded class
+                    toggleBtn.innerHTML = '×'; // Close icon
+                }
+
+                toggleBtn.addEventListener('click', () => {
+                    pageWrapper.classList.toggle('left-nav-collapsed');
+                    pageWrapper.classList.toggle('left-nav-expanded'); // Toggle expanded as well
+                    const isCollapsed = pageWrapper.classList.contains('left-nav-collapsed');
+                    localStorage.setItem(LS_COLLAPSED_KEY, isCollapsed);
+                    
+                    if (isCollapsed) {
+                        toggleBtn.innerHTML = '☰'; 
+                    } else {
+                        toggleBtn.innerHTML = '×'; 
+                    }
+                    console.log(`[LAYOUT] Left nav panel ${isCollapsed ? 'collapsed' : 'expanded'}`);
+                    // Optional: Dispatch resize after transition
+                    setTimeout(() => window.dispatchEvent(new Event('resize')), 350);
+                });
+                leftNavToggleInitialized = true;
+            } else {
+                if (!toggleBtn) console.warn("[LAYOUT_DEBUG_INIT] Left Nav Toggle Button not found.");
+                if (!pageWrapper) console.warn("[LAYOUT_DEBUG_INIT] Page Wrapper not found.");
+            }
+        }
+        
+        // ... (openTab function) ...
+        // ... (DOMContentLoaded - ensure initializeLeftNavToggle is called once) ...
+         function openTab(evt, tabName) {
+            let i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+                tabcontent[i].classList.remove("active-content");
+            }
+            tablinks = document.getElementsByClassName("tab-link");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            const currentTab = document.getElementById(tabName);
+            currentTab.style.display = "block";
+            currentTab.classList.add("active-content");
+            evt.currentTarget.className += " active";
+
+            if (tabName === 'dataEntryTab') {
+                const bidItemTable = document.getElementById('bidItemTable');
+                if (bidItemTable && typeof window.makeTableColumnsResizable === 'function') {
+                    if (!bidItemTable.dataset.resizableInitialized) {
+                        window.makeTableColumnsResizable(bidItemTable);
+                        bidItemTable.dataset.resizableInitialized = "true";
+                    }
+                }
+            } else if (tabName === 'evmResultsTab') {
+                if (typeof window.updateResultsTab === 'function') {
+                    const resultsToPass = window.latestEvmResultsForCurrentPeriod ? JSON.parse(JSON.stringify(window.latestEvmResultsForCurrentPeriod)) : null;
+                    window.updateResultsTab(resultsToPass);
+                }
+            } else if (tabName === 'dashboardTab') {
+                if (typeof window.updateDashboard === 'function') {
+                     const project = (window.currentProjectId && window.allProjectsData) ? window.allProjectsData[window.currentProjectId] : null;
+                     const period = (project && window.currentPeriodId) ? project.periods.find(p => p.id === window.currentPeriodId) : null;
+                     const resultsToPass = window.latestEvmResultsForCurrentPeriod ? JSON.parse(JSON.stringify(window.latestEvmResultsForCurrentPeriod)) : null;
+                    window.updateDashboard(resultsToPass, project, period);
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("[DOM_LOAD] DOMContentLoaded started.");
+
+            if (typeof window.initializeLeftNavPanel === 'function') { window.initializeLeftNavPanel(); }
+            if (typeof window.initializeApp === 'function') { window.initializeApp(); }
+            if (typeof window.initializeLeftNavToggle === 'function') { window.initializeLeftNavToggle(); }
+
+
+            if (typeof window.loadAllDataFromStorage === 'function') {
+                window.loadAllDataFromStorage(); 
+            } else {
+                if (Object.keys(window.allProjectsData || {}).length === 0 && typeof window.handleAddNewProject === 'function') {
+                    setTimeout(() => window.handleAddNewProject(true), 100);
+                }
+            }
+
+            const firstTabButton = document.querySelector('.tab-link');
+            if (firstTabButton) {
+                const activeTabButton = document.querySelector('.tab-link.active');
+                let contentOfActiveTabIsDisplayed = false;
+                if(activeTabButton){
+                    const activeTabName = activeTabButton.getAttribute('onclick').match(/'([^']+)'/)[1];
+                    const activeTabContent = document.getElementById(activeTabName);
+                    if(activeTabContent && getComputedStyle(activeTabContent).display !== 'none' && activeTabContent.classList.contains('active-content')){
+                        contentOfActiveTabIsDisplayed = true;
+                    }
+                }
+
+                if (!contentOfActiveTabIsDisplayed && activeTabButton !== firstTabButton) { 
+                    firstTabButton.click(); 
+                } else if (activeTabButton) { 
+                     activeTabButton.click(); 
+                } else if (!activeTabButton && firstTabButton) {
+                    firstTabButton.click();
+                }
+            }
+            console.log("[DOM_LOAD] DOMContentLoaded finished.");
+        });
+    </script>
+</body>
+</html>

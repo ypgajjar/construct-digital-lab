@@ -1,0 +1,645 @@
+/* EVM Dashboard Specific Styles (evm-dashboard/css/style.css) */
+/* Assumes main lab's style.css is loaded first in evm-dashboard/index.html */
+
+/* --- Use Main Lab's Theme Variables (or define fallbacks if EVM can run standalone) --- */
+:root {
+    /* These will be overridden by main lab's :root if linked correctly and names match */
+    /* Fallbacks if main theme isn't loaded or variables differ: */
+    --bg-blueprint-dark: #0D1220;
+    --bg-blueprint-medium: #161D31;
+    --bg-blueprint-light: #232B4A;
+    --accent-electric-blue: #00BFFF;
+    --accent-cyber-orange: #FF9900;
+    --text-primary-on-dark: #E8EAF6;
+    --text-secondary-on-dark: #B0B8D4;
+    --font-display: 'Aldrich', sans-serif;
+    --font-technical: 'Exo 2', sans-serif;
+    --font-mono: 'Roboto Mono', monospace;
+    --border-color-dark: rgba(0, 191, 255, 0.25);
+    --border-color-medium: rgba(0, 191, 255, 0.15);
+    --border-radius-tech: 5px;
+    --border-radius-sm: 3px; /* Added for consistency */
+    --border-radius-md: 5px; /* Added for consistency, same as tech */
+    --transition-main: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --shadow-glow: 0 0 16px rgba(0, 191, 255, 0.3), 0 0 5px rgba(0, 191, 255, 0.2);
+    --shadow-depth: 0 6px 20px rgba(0,0,0,0.25); /* From main theme */
+    --shadow-depth-light: 0 3px 10px rgba(0,0,0,0.15); /* A lighter shadow variant */
+
+
+    /* EVM Specific Variables, mapped to Blueprint theme */
+    --evm-primary-color: var(--accent-electric-blue);
+    --evm-primary-hover-color: #00A8E0; /* Slightly different hover for EVM */
+    --evm-secondary-color: var(--bg-blueprint-light);
+    --evm-secondary-hover-color: #303A5F; /* Darker hover for blueprint light */
+    --evm-danger-color: #e74c3c; /* A suitable red */
+    --evm-danger-hover-color: #c0392b;
+    --evm-success-color: var(--accent-glow-green, #2ecc71);
+    --evm-warning-color: var(--accent-cyber-orange, #f39c12);
+    --evm-info-color: var(--accent-tech-purple, #8e44ad);
+
+    --evm-text-primary: var(--text-primary-on-dark);
+    --evm-text-secondary: var(--text-secondary-on-dark);
+    --evm-text-accent: var(--accent-electric-blue);
+    
+    --evm-bg-page: var(--bg-blueprint-dark);
+    --evm-bg-panel: var(--bg-blueprint-medium);
+    --evm-bg-section: var(--bg-blueprint-light); 
+    --evm-bg-element-hover: #374151; /* A generic hover, can be blueprint-light */
+
+    --evm-border-color: var(--border-color-medium);
+    --evm-border-strong-color: var(--border-color-dark);
+
+    --evm-left-nav-width: 260px; 
+    --evm-top-toolbar-height: 50px; 
+}
+
+/* Apply base styles to the EVM's body if it gets a specific class */
+body.evm-theme-active { 
+    font-family: var(--font-technical); 
+    background-color: var(--evm-bg-page); 
+    color: var(--evm-text-primary);
+    margin: 0; /* Ensure no margin on body for EVM page */
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* --- GENERAL EVM UI ELEMENTS --- */
+h2, h3, h4 { /* EVM section titles */
+    color: var(--evm-text-primary);
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+#evm-dashboard-pro-app h2 { /* If you wrap your app for more specific targeting */
+    font-family: var(--font-display);
+    font-size: 1.3em; 
+    padding-bottom: 8px; 
+    border-bottom: 1px solid var(--evm-border-color);
+}
+#evm-dashboard-pro-app h3 {
+    font-family: var(--font-display);
+    font-size: 1.1em; 
+    padding-bottom: 6px; 
+    border-bottom: 1px solid var(--evm-border-color);
+}
+#evm-dashboard-pro-app h4 {
+    font-family: var(--font-technical); font-weight: 600;
+    font-size: 1em; 
+    color: var(--evm-text-secondary);
+    border-bottom: none; padding-bottom: 0;
+}
+
+label { 
+    font-family: var(--font-mono);
+    margin-bottom: 5px; font-size: 0.8em; 
+    color: var(--evm-text-secondary); display: block; 
+    text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+input[type="text"], input[type="number"], input[type="date"], select {
+    width: 100%;
+    padding: 8px 10px;
+    background-color: var(--bg-blueprint-dark); /* Darker inputs */
+    border: 1px solid var(--evm-border-color);
+    border-radius: var(--border-radius-tech);
+    color: var(--evm-text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--evm-primary-color);
+    box-shadow: 0 0 0 2px rgba(0, 191, 255, 0.3); /* Using electric blue for focus */
+}
+input::placeholder { color: var(--evm-text-secondary); opacity: 0.6; }
+
+
+/* --- EVM Top Toolbar --- */
+.top-toolbar {
+    background-color: var(--evm-bg-panel);
+    padding: 0 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--evm-border-strong-color);
+    height: var(--evm-top-toolbar-height);
+    flex-shrink: 0;
+    position: relative; 
+    z-index: 1100; 
+}
+.toolbar-left-section { display: flex; align-items: center; gap: 10px; }
+.toolbar-logo { font-family: var(--font-display); font-size: 1.2em; color: var(--evm-text-primary); }
+.toolbar-actions { display: flex; gap: 8px; }
+
+.btn-toolbar {
+    padding: 6px 10px; font-size: 0.8em; font-family: var(--font-technical);
+    background-color: var(--evm-secondary-color); border: 1px solid var(--evm-border-color);
+    color: var(--evm-text-primary); border-radius: var(--border-radius-tech);
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    white-space: nowrap; display: flex; align-items: center; gap: 5px;
+}
+.btn-toolbar:hover { 
+    background-color: var(--evm-primary-color); 
+    border-color: var(--evm-primary-color);
+    color: var(--bg-blueprint-dark);
+}
+.btn-toolbar-icon { /* For sidebar toggle button */
+    background-color: transparent; border: none; color: var(--evm-text-secondary);
+    font-size: 1.5em; padding: 5px 8px; line-height: 1;
+    border-radius: var(--border-radius-tech);
+}
+.btn-toolbar-icon:hover { color: var(--evm-text-primary); background-color: var(--evm-bg-element-hover); }
+
+
+/* --- Page Wrapper & EVM Sidebar --- */
+/* --- Page Wrapper (holds sidebar and main content area) --- */
+.page-wrapper { 
+    display: flex;
+    flex-grow: 1; /* Takes remaining vertical space after top-toolbar */
+    overflow: hidden; /* Important for layout, child elements will scroll */
+    position: relative; /* For absolute positioning of the sidebar within it */
+    /* If top-toolbar is part of the normal document flow (not fixed/absolute on its own): */
+    /* height: calc(100vh - var(--evm-top-toolbar-height)); */ /* Adjust height if toolbar is in flow */
+}
+
+/* --- Left Navigation Panel (Sidebar) --- */
+.left-nav-panel {
+    width: var(--evm-left-nav-width);
+    background-color: var(--evm-bg-panel);
+    padding: 15px 10px; /* Overall padding for the panel content */
+    border-right: 1px solid var(--evm-border-color);
+    /* box-shadow: 1px 0 5px rgba(0,0,0,0.15); */ /* Optional subtle shadow */
+    
+    position: absolute; 
+    top: 0;
+    left: 0;
+    height: 100%; /* Full height of its parent, .page-wrapper */
+    z-index: 1000; 
+    
+    transform: translateX(0%); /* Initial state: visible */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth slide */
+    
+    display: flex; /* Enable flexbox for internal layout */
+    flex-direction: column; /* Stack panel-header and projectListContainer vertically */
+}
+
+.page-wrapper.left-nav-collapsed .left-nav-panel {
+    transform: translateX(calc(-1 * var(--evm-left-nav-width))); /* Slides out left */
+}
+/* Optional: Add a class for when it's explicitly expanded if needed for other transitions */
+.page-wrapper.left-nav-expanded .left-nav-panel {
+    transform: translateX(0%);
+}
+
+
+.panel-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 12px; 
+    padding-bottom: 8px; 
+    border-bottom: 1px solid var(--evm-border-color); 
+    padding-left: 5px; /* Slight indent for header content */
+    padding-right: 5px;
+    flex-shrink: 0; /* Prevent header from shrinking */
+}
+.panel-header h3 { 
+    font-family: var(--font-display); 
+    font-size: 1.1em; 
+    color: var(--evm-text-primary); 
+    margin:0; border:0; padding:0; 
+    white-space: nowrap; /* Prevent title from wrapping */
+}
+#addNewProjectBtn.icon-btn { 
+    background-color: var(--evm-secondary-color); 
+    border: 1px solid var(--evm-border-color);
+    color: var(--evm-text-primary); 
+    width: 30px; 
+    height: 30px; 
+    font-size: 1.2em;
+    border-radius: 50%; /* Circular button */
+    display: flex; align-items: center; justify-content: center; /* Center '+' */
+}
+#addNewProjectBtn.icon-btn:hover { 
+    background-color: var(--evm-primary-color); 
+    border-color: var(--evm-primary-color);
+    color: var(--bg-blueprint-dark); 
+    transform: scale(1.05);
+}
+
+#projectListContainer { 
+    flex-grow: 1; /* Takes available vertical space */
+    overflow-y: auto; /* Enables scrolling for the project list */
+    /* padding-right: 3px; /* Space for scrollbar if it appears, adjust if needed */
+}
+.no-projects-message { 
+    text-align: center; 
+    color: var(--evm-text-secondary); 
+    margin-top: 20px; 
+    font-style: italic; 
+    font-size: 0.85em;
+}
+
+.project-item {
+    margin-bottom: 6px; 
+    border-radius: var(--border-radius-tech);
+    transition: background-color 0.2s ease, border-left-color 0.2s ease;
+    padding: 0 5px; /* Horizontal padding for the project item block */
+    border-left: 3px solid transparent; /* Placeholder for active indicator */
+}
+.project-item:hover:not(.active-project) { 
+    background-color: var(--evm-bg-section); 
+}
+.project-item.active-project {
+    background-color: var(--evm-bg-section); /* Or var(--evm-primary-color) for stronger highlight */
+    border-left-color: var(--evm-primary-color); /* Active project indicator */
+}
+
+.project-header { 
+    padding: 7px 2px; /* Padding inside the header bar of a project item */
+    min-height: 36px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    cursor: pointer; 
+}
+
+.project-name-display {
+    font-family: var(--font-technical); 
+    font-weight: 400; 
+    font-size: 0.85em; 
+    line-height: 1.3; 
+    white-space: normal; /* Allow project name to wrap */
+    word-wrap: break-word; 
+    overflow-wrap: break-word;
+    margin-right: 8px; /* Space before action buttons */
+    display: block; /* Helps with width calculation for wrapping */
+    color: var(--evm-text-secondary);
+    flex-grow: 1; /* Takes available space */
+}
+.project-item.active-project .project-name-display { 
+    color: var(--evm-text-primary); /* Or var(--evm-text-accent) */
+    font-weight: 600; 
+}
+.project-header:hover .project-name-display { 
+    color: var(--evm-text-accent); 
+}
+
+.project-actions {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0; /* Prevent buttons from being squished */
+}
+
+/* General styling for small icon buttons in project/period items */
+.icon-btn-project-action, 
+.icon-btn-period-action {
+    background: none; border: none;
+    padding: 4px; /* Reduced padding for tighter fit */
+    margin-left: 3px; 
+    cursor: pointer;
+    color: var(--evm-text-secondary); 
+    opacity: 0.7;
+    transition: opacity 0.2s ease, color 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+    border-radius: var(--border-radius-sm);
+    line-height: 1; 
+    display: inline-flex; 
+    align-items: center;
+    justify-content: center;
+}
+.icon-btn-project-action:hover, 
+.icon-btn-period-action:hover {
+    opacity: 1;
+    transform: scale(1.1); 
+    background-color: var(--evm-bg-element-hover);
+}
+
+/* Specific icon colors on hover for non-active project items */
+.project-item:not(.active-project) .add-period-btn:hover i { color: var(--evm-success-color); }
+.project-item:not(.active-project) .delete-project-btn:hover i,
+.project-item:not(.active-project) .delete-period-btn:hover i { color: var(--evm-danger-color); }
+
+/* Icon sizes */
+.icon-btn-project-action i { font-size: 0.9em; }
+.icon-btn-period-action i { font-size: 0.85em; }
+
+/* Styling for icons within an ACTIVE project item */
+.project-item.active-project .icon-btn-project-action,
+.project-item.active-project .icon-btn-period-action {
+    color: var(--evm-text-primary); /* Brighter on active project */
+    opacity: 0.8;
+}
+.project-item.active-project .icon-btn-project-action:hover,
+.project-item.active-project .icon-btn-period-action:hover {
+    opacity: 1;
+    background-color: rgba(0, 191, 255, 0.2); /* Use a subtle primary color tint for hover */
+}
+.project-item.active-project .add-period-btn:hover i { color: var(--accent-glow-green); }
+.project-item.active-project .delete-project-btn:hover i,
+.project-item.active-project .delete-period-btn:hover i { color: var(--accent-cyber-orange); }
+
+
+.reporting-periods-list { 
+    list-style: none; 
+    padding-left: 10px; /* Indentation for periods */
+    margin: 4px 0 8px 8px; /* top/bottom margin, left margin for alignment */
+    border-left: 1px solid var(--evm-border-color); 
+}
+.project-item.active-project .reporting-periods-list {
+    border-left-color: var(--evm-primary-color); /* Highlight border for active project's periods */
+}
+
+.period-item {
+    padding: 5px 8px; 
+    font-size: 0.78em; 
+    color: var(--evm-text-secondary);
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    border-radius: var(--border-radius-sm); 
+    margin-bottom: 2px;
+    transition: background-color 0.2s, color 0.2s, border-left-color 0.2s ease;
+    border-left: 3px solid transparent; /* For active period indicator */
+    cursor: pointer;
+}
+.period-name-text { 
+    flex-grow: 1; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 8px; 
+}
+/* Period hover and active states */
+.project-item:not(.active-project) .period-item:hover { 
+    background-color: var(--evm-bg-section); 
+    color: var(--evm-text-primary); 
+}
+.project-item.active-project .period-item {
+    color: var(--evm-text-secondary); /* Default for periods in active project */
+}
+.project-item.active-project .period-item:hover {
+     background-color: var(--evm-bg-section); /* Hover for period in active project */
+     color: var(--evm-text-accent);
+}
+.period-item.active-period { 
+    background-color: var(--evm-secondary-color) !important; /* Stronger highlight for active period */
+    color: var(--evm-text-primary) !important; 
+    font-weight: 600;
+    border-left-color: var(--evm-primary-color) !important; /* Active indicator */
+}
+.period-item.active-period .period-name-text {
+    color: var(--evm-text-primary) !important; /* Ensure text is readable */
+}
+.period-item.active-period .icon-btn-period-action {
+    color: var(--evm-text-primary) !important; /* Make icon match text color */
+    opacity: 0.8;
+}
+.period-item.active-period .icon-btn-period-action:hover {
+    color: var(--evm-danger-color) !important; /* Red for delete on hover, even if active */
+    opacity: 1;
+}
+
+
+/* --- EVM Main Content Area Container (Pushed by Sidebar) --- */
+.main-content-area-container {
+    margin-left: var(--evm-left-nav-width); 
+    flex-grow: 1; height: 100%; overflow: hidden; 
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative; 
+}
+.page-wrapper.left-nav-collapsed .main-content-area-container { margin-left: 0; }
+
+.main-content-wrapper { /* Actual scrollable area */
+    height: 100%; padding: 15px; overflow-y: auto;
+    background-color: var(--evm-bg-page); 
+}
+
+#project-info-header { 
+    padding: 15px; background-color: var(--evm-bg-panel); 
+    border-radius: var(--border-radius-tech); margin-bottom: 15px; 
+    border: 1px solid var(--evm-border-color);
+}
+#project-info-header h2 { 
+    font-family: var(--font-display); font-size: 1.2em; 
+    color: var(--evm-text-accent); border-bottom-color: var(--evm-border-color);
+    margin-bottom: 12px; padding-bottom: 8px;
+}
+.project-info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px 18px; }
+.project-info-grid > div { /* Individual field wrapper */
+    /* background-color: var(--evm-bg-section); */ /* Optional distinct bg for field groups */
+    /* padding: 8px; border-radius: var(--border-radius-sm); */
+    /* border: 1px solid var(--evm-border-color); */
+}
+
+
+/* --- EVM Tabs --- */
+.tab-navigation { 
+    display: flex; margin-bottom: 0; 
+    background-color: transparent; 
+    border-bottom: 1px solid var(--evm-primary-color); 
+}
+.tab-link { 
+    font-family: var(--font-technical); font-weight: 500;
+    background-color: transparent; padding: 8px 15px; 
+    color: var(--evm-text-secondary); font-size: 0.9em; 
+    border:none; border-bottom: 2px solid transparent; margin-bottom: -1px;
+}
+.tab-link:hover { color: var(--evm-text-primary); }
+.tab-link.active { color: var(--evm-primary-color); border-bottom-color: var(--evm-primary-color); font-weight:600; }
+
+.tab-content { 
+    padding: 15px; background-color: var(--evm-bg-panel); 
+    border-radius: 0 0 var(--border-radius-tech) var(--border-radius-tech); 
+    border: 1px solid var(--evm-border-color); border-top: none;
+    animation: fadeIn 0.3s ease-out;
+}
+.tab-content > h3 { /* Direct H3 child of tab-content */
+    font-family: var(--font-display); color: var(--evm-text-primary);
+    font-size: 1.1em; border-bottom: 1px solid var(--evm-border-color);
+    margin-bottom: 15px; padding-bottom: 8px;
+}
+.tab-content > h3 .header-value { color: var(--evm-text-accent); }
+
+
+/* --- EVM Data Entry Table --- */
+.data-entry-controls { margin-bottom: 12px; display: flex; gap: 8px; }
+.data-entry-controls .btn-primary, .data-entry-controls .btn-secondary { /* Make these match toolbar buttons */
+    padding: 6px 10px; font-size: 0.8em; font-family: var(--font-technical);
+    background-color: var(--evm-secondary-color); border: 1px solid var(--evm-border-color);
+    color: var(--evm-text-primary); border-radius: var(--border-radius-tech);
+}
+.data-entry-controls .btn-primary:hover, .data-entry-controls .btn-secondary:hover {
+    background-color: var(--evm-primary-color); border-color: var(--evm-primary-color);
+    color: var(--bg-blueprint-dark);
+}
+
+.table-container { border: 1px solid var(--evm-border-color); border-radius: var(--border-radius-sm); }
+#bidItemTable { 
+    width: 100%; border-collapse: collapse; table-layout: fixed; 
+    font-family: var(--font-mono); font-size:0.8em;
+}
+#bidItemTable th {
+    background-color: var(--evm-bg-section); color: var(--evm-text-primary);
+    font-family: var(--font-technical); font-weight: 600; font-size:0.95em;
+    padding: 7px 8px; text-align: left; border-color: var(--evm-border-color);
+    position: sticky; top: 50px; /* Adjust if controls bar height changes */
+    z-index: 10; white-space: normal; word-wrap: break-word; overflow-wrap: break-word;
+    vertical-align: middle; position: relative; 
+}
+
+#bidItemTable th:nth-child(1) { width: 3%; }   /* # */
+#bidItemTable th:nth-child(2) { width: 7%; }   /* Item No. */
+#bidItemTable th:nth-child(3) { width: 15%; }  /* Description */
+#bidItemTable th:nth-child(4) { width: 4%; }   /* Unit */
+#bidItemTable th:nth-child(5) { width: 7%; }   /* Total Contract Qty */
+#bidItemTable th:nth-child(6) { width: 6%; }   /* Unit Cost */
+#bidItemTable th:nth-child(7) { width: 7%; }   /* Unit Contract Price */
+#bidItemTable th:nth-child(8) { width: 8%; }   /* Total Cost Budget (Item) */
+#bidItemTable th:nth-child(9) { width: 8%; }   /* Total Contract Price (Item) */
+#bidItemTable th:nth-child(10) { width: 7%; }  /* Planned Profit (Item) */
+#bidItemTable th:nth-child(11) { width: 6%; }  /* Planned Qty (Period) */
+#bidItemTable th:nth-child(12) { width: 8%; }  /* PV (Cost - Period) */
+#bidItemTable th:nth-child(13) { width: 6%; }  /* Units Done (To Date) */
+#bidItemTable th:nth-child(14) { width: 6%; }  /* % Comp (To Date) */
+#bidItemTable th:nth-child(15) { width: 7%; }  /* EV (Cost - To Date) */
+#bidItemTable th:nth-child(16) { width: 6%; }  /* AC (To Date) */
+#bidItemTable th:nth-child(17) { width: 4%; }  /* Action */ /* (action-cell-header) */
+
+
+#bidItemTable thead th {
+    position: sticky;
+    top: 60px; /* Example: height of sticky .data-entry-controls + its padding-bottom */
+                 /* You'll need to measure or calculate this height dynamically for perfect results,
+                    or set a fixed height on .data-entry-controls.
+                    For now, let's try a fixed offset.
+                 */
+    background-color: var(--bg-section); /* Ensure background for sticky header */
+    z-index: 10;
+}
+#bidItemTable th.action-cell-header { text-align: center; width: 40px; }
+.resize-handle {
+    position: absolute; top: 0; right: -3px; width: 6px; height: 100%;
+    cursor: col-resize; z-index: 20;
+}
+
+#bidItemTable tbody tr:nth-child(even) { background-color: var(--evm-bg-element-hover); }
+#bidItemTable tbody tr:hover td:not(.editable-cell:focus) { background-color: #374151cc; }
+#bidItemTable td {
+    border: 1px solid var(--evm-border-color); padding: 5px 7px; vertical-align: middle;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+#bidItemTable td[data-field="description"] { white-space: normal; word-wrap: break-word; overflow-wrap: break-word; overflow: visible; text-overflow: clip; vertical-align: top; }
+#bidItemTable td.editable-cell { cursor: cell; background-color: var(--bg-blueprint-dark); color: var(--evm-text-primary); outline:none; }
+#bidItemTable td.editable-cell:focus { background-color: var(--evm-bg-section); box-shadow: inset 0 0 0 1.5px var(--evm-primary-color); }
+#bidItemTable td.editable-cell.numeric { text-align: right; }
+#bidItemTable td.calculated-cell { background-color: var(--evm-bg-panel); color: var(--evm-text-secondary); }
+#bidItemTable td.calculated-cell.numeric { text-align: right; }
+#bidItemTable td.action-cell { text-align: center; white-space: nowrap; }
+#bidItemTable tfoot td {
+    font-weight: 600; background-color: var(--evm-bg-section); color: var(--evm-text-primary);
+    padding: 7px 8px; border-color: var(--evm-border-color); text-align: right; font-size: 0.85em;
+}
+#bidItemTable tfoot td.total-label { text-align: right; padding-right: 12px; }
+
+
+/* --- EVM Results Tab Enhancements --- */
+.results-layout-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 15px; }
+.results-column { display: flex; flex-direction: column; gap: 15px; }
+.card-style { /* Common styling for sections in Results & Abbreviations */
+    background-color: var(--evm-bg-section); 
+    padding: 12px 18px; border-radius: var(--border-radius-tech);
+    border: 1px solid var(--evm-border-color);
+    /* box-shadow: var(--shadow-depth-light); */ /* Optional lighter shadow */
+}
+#evmResultsTab .results-section h4, 
+#evmResultsTab .evm-footnote h4 {
+    font-family: var(--font-display); color: var(--evm-text-primary);
+    font-size: 1em; margin-bottom: 10px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--evm-border-medium); 
+}
+.results-summary-grid { display: grid; grid-template-columns: 1fr; gap: 6px; }
+.results-summary-grid div { /* Individual metric item */
+    background-color: var(--bg-blueprint-dark); padding: 7px 10px;
+    border-radius: var(--border-radius-sm); font-size: 0.8em;
+    display: flex; justify-content: space-between; align-items: center;
+    border: 1px solid var(--evm-border-color);
+    font-family: var(--font-mono);
+}
+.metric-value { font-weight: 600; color: var(--evm-text-accent); }
+/* ... (positive/negative value text classes from before) ... */
+.metric-value.positive-value-text { color: var(--evm-success-color) !important; }
+.metric-value.negative-value-text { color: var(--evm-danger-color) !important; }
+.evm-footnote ul { list-style-type: none; padding-left: 0; margin-top: 8px; }
+.evm-footnote li { padding: 3px 0; font-size: 0.75em; color: var(--evm-text-secondary); }
+.evm-footnote li strong { color: var(--evm-text-primary); min-width: 130px; display: inline-block; font-weight: 500; }
+
+
+/* --- Dashboard Tab (use theme variables) --- */
+.dashboard-header h3 { font-family: var(--font-display); }
+.dashboard-header h3 .header-value { color: var(--evm-text-accent); }
+.chart-card {
+    background-color: var(--evm-bg-panel); padding: 15px;
+    border-radius: var(--border-radius-tech); border: 1px solid var(--evm-border-color);
+    /* box-shadow: var(--shadow-depth); */
+}
+.chart-card h4 {
+    font-family: var(--font-display); font-size: 0.95em; text-transform: uppercase;
+    color: var(--evm-text-primary); margin-bottom: 10px; letter-spacing: 0.5px;
+}
+.chart-placeholder { background-color: var(--evm-bg-section); }
+#kpiNarrative { background-color: var(--evm-bg-section); color: var(--evm-text-secondary); font-size:0.8em; }
+.ev-header { color: var(--evm-text-secondary); font-size: 0.8em; }
+.ev-summary { color: var(--evm-text-secondary); font-size: 0.8em; }
+
+
+/* --- Toasts & Modals (use theme variables) --- */
+.toast.success { background-color: var(--evm-success-color); }
+.toast.error   { background-color: var(--evm-danger-color); }
+.toast.info    { background-color: var(--evm-info-color); }
+.toast.warning { background-color: var(--evm-warning-color); }
+.modal-overlay { background-color: rgba(13, 18, 32, 0.85); backdrop-filter: blur(5px); }
+.modal-content { background-color: var(--evm-bg-panel); border-color: var(--evm-border-strong-color); }
+.modal-content h4 { font-family: var(--font-display); }
+.modal-content p { color: var(--evm-text-secondary); }
+
+
+/* --- ApexCharts Theming (use theme variables) --- */
+.apexcharts-tooltip { background: var(--evm-bg-section) !important; color: var(--evm-text-primary) !important; border-color: var(--evm-border-strong-color) !important; }
+.apexcharts-tooltip-title { background: var(--evm-bg-panel) !important; border-bottom-color: var(--evm-border-strong-color) !important; }
+.apexcharts-legend-text { color: var(--evm-text-secondary) !important; font-family: var(--font-technical) !important;}
+.apexcharts-yaxis-label, .apexcharts-xaxis-label { fill: var(--evm-text-secondary) !important; font-family: var(--font-mono) !important; }
+.apexcharts-gridline { stroke: var(--evm-border-color) !important; }
+
+
+/* --- Responsive Adjustments (Review and adapt based on main lab theme's breakpoints) --- */
+@media (max-width: 1200px) {
+    :root { --evm-left-nav-width: 240px; } 
+    .project-info-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+    .results-layout-grid { grid-template-columns: 1fr; } /* Stack results sections earlier */
+}
+@media (max-width: 992px) { 
+    :root { --evm-left-nav-width: 220px; --evm-top-toolbar-height: 45px; }
+    .toolbar-logo { display: none; } 
+    .main-content-wrapper { padding: 12px; }
+    .dashboard-row { grid-template-columns: 1fr; } 
+    #bidItemTable th { top: 45px; /* Adjust for potentially smaller sticky controls bar */ }
+
+}
+@media (max-width: 768px) { 
+    :root { --evm-left-nav-width: 200px; }
+    .top-toolbar { padding: 0 8px; height: 40px; }
+    .btn-toolbar { padding: 4px 7px; font-size: 0.7em; }
+    .btn-toolbar-icon { font-size: 1.2em; }
+    .main-content-wrapper, #project-info-header, .tab-content, .card-style { padding: 8px; }
+    #project-info-header { margin-bottom: 10px; }
+    .project-info-grid { grid-template-columns: 1fr; gap: 8px; } 
+    .tab-link { padding: 7px 10px; font-size: 0.8em; }
+    #bidItemTable th, #bidItemTable td { padding: 4px 5px; font-size: 0.75em; }
+    #bidItemTable th { top: 40px; /* Adjust again */ }
+    .left-nav-panel { padding: 8px; } 
+}
+
+@keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
